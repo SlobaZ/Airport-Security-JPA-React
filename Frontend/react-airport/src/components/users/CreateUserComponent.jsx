@@ -66,7 +66,7 @@ class CreateUserComponent extends Component {
     }
 
     changeFirstnameHandler= (event) => {
-        this.setState({firstname: event.target.firstname});
+        this.setState({firstname: event.target.value});
     }
     changeLastnamelHandler= (event) => {
         this.setState({lastname: event.target.value});
