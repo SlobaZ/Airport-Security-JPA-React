@@ -2,6 +2,7 @@ package airport.controller;
 
 import java.util.List;
 
+
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,7 +29,6 @@ import airport.loginuserinfo.LoggedInUser;
 import airport.model.ERole;
 import airport.model.User;
 import airport.service.UserService;
-//import airport.service.impl.UserDetailsImpl;
 import airport.support.UserDTOToUser;
 import airport.support.UserToUserDTO;
 
@@ -38,9 +38,10 @@ import airport.support.UserToUserDTO;
 @RequestMapping(value="/api/users")
 public class ApiUserController {
 	
+
 	@Autowired
 	AuthenticationManager authenticationManager;
-		
+
 	@Autowired
 	private UserService userService;
 	
@@ -49,10 +50,11 @@ public class ApiUserController {
 	
 	@Autowired
 	private UserDTOToUser toUser;
-
 	
-
+		
+	
 	@GetMapping("/all")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE')")
 	ResponseEntity<List<UserDTO>> getAlls() {
 		List<User> users = null;
 		users = userService.findByRoles_name(ERole.ROLE_PASSENGER);
@@ -61,6 +63,7 @@ public class ApiUserController {
 	
 	
 	@GetMapping()
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_EMPLOYEE')")
 	ResponseEntity<List<UserDTO>> getAllUsers(@RequestParam (required = false) String username,
 			@RequestParam (required = false) String lastname,
 			@RequestParam (required = false) String city,
@@ -96,6 +99,7 @@ public class ApiUserController {
 	
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN') or hasRole('EMPLOYEE')")
 	ResponseEntity<UserDTO> getUserById(@PathVariable Long id){
 		User user = userService.getById(id);
 		if(user==null){
