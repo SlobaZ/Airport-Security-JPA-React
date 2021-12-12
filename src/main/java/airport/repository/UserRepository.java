@@ -22,14 +22,16 @@ public interface UserRepository extends JpaRepository<User,Long>{
 	
 	Boolean existsByPassword(String password);
 	
+	@Query("SELECT u FROM User u WHERE u.username = :username")
+	User findByUserName(String username);	
 	
 	List<User> findByRoles_name(ERole name);
 	
 	Page<User> findByRoles_name(ERole name, Pageable pageRequest);
 
 	
-	@Query("SELECT u FROM User u WHERE "
-			+ "( NOT u.username='Admin' AND  NOT u.username='Employee' ) AND "
+	@Query("SELECT u FROM User u join u.roles r WHERE "
+			+ "( NOT r.name='Role_Admin' AND NOT r.name='Role_Employee' ) AND "
 			+ "(:username IS NULL or u.username like :username ) AND "
 			+ "(:lastname IS NULL or u.lastname like :lastname ) AND "
 			+ "(:city IS NULL or u.city like :city ) "
@@ -55,10 +57,6 @@ public interface UserRepository extends JpaRepository<User,Long>{
 			@Param("lastname") String lastname, 
 			@Param("city") String city, 
 			Pageable pageRequest);
-	
-	
-
-	
 	
 	
 
