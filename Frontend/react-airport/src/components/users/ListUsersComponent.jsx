@@ -8,7 +8,6 @@ class ListUsersComponent extends Component {
 
         this.state = {
                 users: [],
-                logedUserName: '',
                 searchUsername: '',
                 searchLastname: '',
                 searchCity: ''
@@ -57,7 +56,6 @@ class ListUsersComponent extends Component {
       });
     }
         const config = { params: {} };
-        config.params.logedUserName = user.username;
         if (this.state.username !== "") {
           config.params.username = this.state.searchUsername;
         }
