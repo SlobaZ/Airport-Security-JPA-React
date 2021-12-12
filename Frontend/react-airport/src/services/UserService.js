@@ -6,11 +6,11 @@ const USER_API_BASE_URL = "http://localhost:8080/api/users";
 class UserService { 
 	
 	getAll(){
-		return axios.get(USER_API_BASE_URL + '/all' );
+		return axios.get(USER_API_BASE_URL + '/all' ,  { headers: authHeader() } );
 	}
 
     getUsers(config){
-        return axios.get(USER_API_BASE_URL, config, { headers: authHeader() } );
+        return axios.get(USER_API_BASE_URL,  { headers: authHeader() } );
     }
 
 
