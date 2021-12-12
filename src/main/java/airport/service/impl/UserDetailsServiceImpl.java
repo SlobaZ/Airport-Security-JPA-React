@@ -66,6 +66,11 @@ public class UserDetailsServiceImpl implements UserService, UserDetailsService{
 		return userRepository.findByUsername(username);
 	}
 	
+	@Override
+	public User findByUserName(String username) {
+		return userRepository.findByUserName(username);
+	}
+	
 	
 	@Override
 	public List<User> findByRoles_name(ERole name) {
