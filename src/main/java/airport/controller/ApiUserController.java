@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import airport.dto.UserDTO;
-import airport.loginuserinfo.LoggedInUser;
 import airport.model.ERole;
 import airport.model.User;
 import airport.service.UserService;
@@ -69,7 +68,8 @@ public class ApiUserController {
 			@RequestParam (required = false) String city,
 			@RequestParam(value="pageNum", defaultValue="0") int pageNum){
 			
-		String loggedUser = LoggedInUser.getLoggedInUser();
+		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String loggedUser = String.valueOf ( userDetails.getUsername() );
 		
 		Page<User> userPage = null;
 		
