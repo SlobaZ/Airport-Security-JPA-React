@@ -1,7 +1,8 @@
 package airport.controller;
 
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Set;
 
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,8 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import airport.dto.UserDTO;
 import airport.model.ERole;
+import airport.model.Role;
 import airport.model.User;
 import airport.service.UserService;
+import airport.service.impl.UserDetailsImpl;
 import airport.support.UserDTOToUser;
 import airport.support.UserToUserDTO;
 
@@ -67,13 +71,20 @@ public class ApiUserController {
 			@RequestParam (required = false) String lastname,
 			@RequestParam (required = false) String city,
 			@RequestParam(value="pageNum", defaultValue="0") int pageNum){
-			
-		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		String loggedUser = String.valueOf ( userDetails.getUsername() );
+		
 		
 		Page<User> userPage = null;
 		
-		if("Admin".equals(loggedUser)) {
+		UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String loggedUser = String.valueOf ( userDetails.getUsername() );
+		
+		
+		User user = userService.findByUserName(loggedUser);
+		Set<Role> roles = user.getRoles();
+		List<Role> list = new ArrayList<Role>(roles);
+		Role role = list.get(0);
+						
+		if(ERole.ROLE_ADMIN.equals(role.getName())) {
 			if(username != null || lastname != null || city != null ) {
 				userPage = userService.searchForAdmin(username, lastname, city, pageNum);
 			}
@@ -81,7 +92,7 @@ public class ApiUserController {
 				userPage = userService.findAllForAdmin(pageNum);
 			}
 		}
-		if("Employee".equals(loggedUser)) {
+		if(ERole.ROLE_EMPLOYEE.equals(role.getName())) {
 			if(username != null || lastname != null || city != null ) {
 				userPage = userService.searchForEmployee(username, lastname, city, pageNum);
 			}
@@ -90,6 +101,7 @@ public class ApiUserController {
 			}
 		}
 		
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("totalPages", Integer.toString(userPage.getTotalPages()) );
 		return new ResponseEntity<>( toDTO.convert(userPage.getContent()) , headers , HttpStatus.OK);
