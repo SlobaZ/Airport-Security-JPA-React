@@ -20,6 +20,8 @@ public interface UserService {
 	
 	Optional<User> findByUsername(String username);
 	
+	User findByUserName(String username);
+	
 	
 	List<User> findByRoles_name(ERole name);
 	
