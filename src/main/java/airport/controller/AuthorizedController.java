@@ -27,7 +27,6 @@ import airport.security.jwt.JwtUtils;
 import airport.service.impl.UserDetailsImpl;
 import airport.repository.UserRepository;
 import airport.repository.RoleRepository;
-import airport.loginuserinfo.LoggedInUser;
 import airport.model.ERole;
 import airport.model.Role;
 import airport.model.User;
@@ -68,7 +67,6 @@ public class AuthorizedController {
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
 		
-		LoggedInUser.setLoggedInUser();
 		
 		return ResponseEntity.ok(new JwtResponse(jwt,  userDetails.getId(),  userDetails.getUsername(), userDetails.getFirstname(),
 				userDetails.getLastname(), userDetails.getJmbg(), userDetails.getCity(),  roles));
@@ -132,14 +130,7 @@ public class AuthorizedController {
 	}
 	
 	
-	@PostMapping("/logout")
-	public ResponseEntity<?> logoutUser(){
-		LoggedInUser.logoutUser();
-		return ResponseEntity.ok(new MessageResponse("User logout successfully!"));
-	}
-	
-	
-	
+
 	
 	
 }
