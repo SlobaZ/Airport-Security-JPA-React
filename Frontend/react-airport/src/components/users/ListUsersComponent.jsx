@@ -55,7 +55,7 @@ class ListUsersComponent extends Component {
         showEmployeeAndAdmin: user.roles.includes("ROLE_EMPLOYEE") || user.roles.includes("ROLE_ADMIN"),
       });
     }
-        const config = { params: {} };
+        const config = { headers:{ Authorization: 'Bearer ' + user.accessToken } , params: {} };
         if (this.state.username !== "") {
           config.params.username = this.state.searchUsername;
         }
@@ -80,7 +80,7 @@ class ListUsersComponent extends Component {
            
             <div>
                 <br/>
-                {showEmployeeAndAdmin && (
+              
                  <div className="searchDiv">
                 <form onSubmit={this.handleSubmit}>
                    
@@ -108,7 +108,7 @@ class ListUsersComponent extends Component {
 
                 </form>
                 </div>
-                )}
+          
                 <br/>  
                  <h2 className="text-center">User List</h2>
                  {showEmployeeAndAdmin && (
