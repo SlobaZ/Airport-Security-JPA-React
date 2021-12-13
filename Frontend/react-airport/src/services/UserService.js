@@ -9,8 +9,8 @@ class UserService {
 	return axios.get(USER_API_BASE_URL + '/all' , { headers: authHeader() } );
     }
 
-    getUsers(config){
-        return axios.get(USER_API_BASE_URL ,  { headers: authHeader() } );
+     getUsers(config){
+        return axios.get(USER_API_BASE_URL , config  );
     }
 
 
