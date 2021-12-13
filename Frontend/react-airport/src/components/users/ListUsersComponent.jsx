@@ -55,7 +55,7 @@ class ListUsersComponent extends Component {
         showEmployeeAndAdmin: user.roles.includes("ROLE_EMPLOYEE") || user.roles.includes("ROLE_ADMIN"),
       });
     }
-        const config = { headers:{ Authorization: 'Bearer ' + user.accessToken } , params: {} };
+        let config = { headers:{ Authorization: 'Bearer ' + user.accessToken } , params: {} };
         if (this.state.username !== "") {
           config.params.username = this.state.searchUsername;
         }
