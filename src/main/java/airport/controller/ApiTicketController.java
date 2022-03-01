@@ -111,8 +111,13 @@ public class ApiTicketController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
+		Flight flight = flightService.getById(deleted.getFlight().getId());
+		flight.setFreeSeats(flight.getFreeSeats()+1);
+		flightService.save(flight);
+		
 		return new ResponseEntity<>( toDTO.convert(deleted), HttpStatus.OK);
 	}
+		
 		
 	
 	
@@ -148,9 +153,22 @@ public class ApiTicketController {
 				
 		Ticket persisted = ticketService.getById(id);
 		
+		Flight oldFlight = flightService.getById(persisted.getFlight().getId());
+				
 		User user = userService.getById(ticketDTO.getUserId());
 		Flight flight = flightService.getById(ticketDTO.getFlightId());
 		
+		if(flight.getFreeSeats()>0) {
+			oldFlight.setFreeSeats(oldFlight.getFreeSeats()+1);
+			flightService.save(oldFlight);
+			flight.setFreeSeats(flight.getFreeSeats()-1);
+			flightService.save(flight);
+		
+		}
+		else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+				
 		persisted.setUser(user);
 		persisted.setFlight(flight);
 		
